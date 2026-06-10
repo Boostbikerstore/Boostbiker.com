@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Online Login</title>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+
+    /* ruhiger, moderner Dark-Gradient */
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .login-box {
+    width: 320px;
+    padding: 30px;
+    border-radius: 20px;
+
+    /* Glass Effekt */
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+
+    color: white;
+    text-align: center;
+  }
+
+  input {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 12px;
+
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+
+    color: white;
+    outline: none;
+  }
+
+  input::placeholder {
+    color: rgba(255,255,255,0.6);
+  }
+
+  button {
+    width: 95%;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+
+    transition: 0.2s ease;
+  }
+
+  button:hover {
+    transform: scale(1.03);
+  }
+
+  #errorMsg {
+    margin-top: 10px;
+    color: #ff5c5c;
+    font-weight: bold;
+    display: none;
+  }
+
+  /* Overlay */
+  #overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    color: white;
+    font-size: 22px;
+    text-align: center;
+  }
+
+  #timer {
+    font-size: 32px;
+    margin-top: 10px;
+    color: #00c6ff;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+  <h2>Du willst was Bestellen? Dann log dich ein</h2>
+
+  <input id="id" placeholder="ID">
+  <input id="pw" type="password" placeholder="Passwort">
+
+  <button onclick="login()">Login</button>
+
+  <div id="errorMsg"></div>
+</div>
+
+<div id="overlay">
+  <div id="message">Login erfolgreich</div>
+  <div>Weiterleitung in</div>
+  <div id="timer">5</div>
+</div>
+
+<script>
+const users = [
+  { id: "1", pw: "1", name: "Max / 0 von 3" },
+  { id: "2", pw: "2", name: "Anna / 0 von 3" }
+];
+
+function login() {
+  const id = document.getElementById("id").value;
+  const pw = document.getElementById("pw").value;
+  const errorMsg = document.getElementById("errorMsg");
+
+  const user = users.find(u => u.id === id && u.pw === pw);
+
+  if (user) {
+    errorMsg.style.display = "none";
+
+    localStorage.setItem("user", JSON.stringify(user));
+    showOverlay(user.name);
+
+  } else {
+    errorMsg.style.display = "block";
+    errorMsg.innerText = "❌ ID oder Passwort ist falsch!";
+  }
+}
+
+function showOverlay(name) {
+  const overlay = document.getElementById("overlay");
+  const timerEl = document.getElementById("timer");
+  const msg = document.getElementById("message");
+
+  overlay.style.display = "flex";
+  msg.innerText = "Willkommen " + name;
+
+  let time = 5;
+  timerEl.innerText = time;
+
+  const interval = setInterval(() => {
+    time--;
+    timerEl.innerText = time;
+
+    if (time === 0) {
+      clearInterval(interval);
+      window.location.href = "Onlien_bestellung.html";
+    }
+  }, 1000);
+}
+</script>
+
+</body>
+</html>
